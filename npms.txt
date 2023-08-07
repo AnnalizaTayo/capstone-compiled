@@ -1,0 +1,32 @@
+
+npm install @reduxjs/toolkit redux react-redux axios
+//use redux and axios to fetch data from API server and store it in a global variable
+
+$primary-color: #C8A763;
+$white-color: #FFFFFF;
+$soft-color: #1C1C1C;
+$dark-color: #000000;
+
+//Black Front
+import Home from './client/pages/Home';
+import Catalog from './client/pages/Catalog';
+import Contact from './client/pages/Contact';
+
+//White Front
+import About from './client/pages/About';
+import Faqs from './client/pages/Faqs';
+
+
+
+import Login from './admin/pages/Login';
+import Collections from './admin/pages/Collections';
+import Company from './admin/pages/Company';
+import Dashboard from './admin/pages/Dashboard';
+import Subscribers from './admin/pages/Subscribers';
+import Users from './admin/pages/Users';
+import FaqsList from './admin/pages/FaqsList';
+
+
+https://drive.google.com/file/d/1n-OQWB1GwH5WDWfOct_5xkT_5Xs3LQtH/view?usp=sharing
+
+https://drive.google.com/file/d/1bIx75QTXyAxQopslq6asSnA-jXv8kyoT/view?usp=sharing
