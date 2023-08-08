@@ -28,18 +28,20 @@ import Faqs from './client/pages/Faqs';
 import Navbar from './client/components/Navbar';
 import ClientFooter from './client/components/ClientFooter';
 
+
 const AdminLayout = ({ children }) => {
   return (
-    <div className='admin'>
-      <header>
-        <AdminNav/>
-      </header>
-      <main className='container'>
-        <aside className='menuContainer'><Menu/></aside>
-        <section className='contentContainer'>{children}</section>
-      </main>
-      <footer ><Footer/></footer>
-    </div>
+      <div className='admin'>
+        <header>
+          <AdminNav/>
+        </header>
+        <main className='container'>
+          <aside className='menuContainer'><Menu/></aside>
+          <section className='contentContainer'>{children}</section>
+        </main>
+        <footer ><Footer/></footer>
+      </div>
+    
   );
 };
 

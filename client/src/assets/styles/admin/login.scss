@@ -1,4 +1,5 @@
 @import '../global/globalColors.scss';
+@import '../global/responsive.scss';
 
 .auth {
     position: fixed;
@@ -6,7 +7,7 @@
     left: 0;
     height: 100vh;
     width: 100vw;
-    overflow: hidden;
+    overflow: auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,12 +20,28 @@
     background-repeat: no-repeat;
 
     .content {
-        .card {
+        isolation: isolate;
+        .squareTilt {
+            transform: rotate(170deg);
+            transform-origin: center center;
+            position: absolute;
+            z-index: 1;
+        }
+
+        .squareTilt, .card {
             width: 300px;
-            border: 1px solid #D4AF37;
-            border-radius: 10px;
+            height: 350px;
+            border-image: linear-gradient(120deg, #a76433, #e48746, #f6d79a, #f4dba5, #d19f60, #fdf2cc, #e48746, #f6d79a, #f4dba5, #d19f60, #fdf2cc);
+            border-image-slice: 1;
+            border-width: 0.95rem;
+            border-style: solid;
+            opacity: 0;
+            transition: ease-in;
+            animation: fadeIn 2s ease-in forwards;
             padding: 1.75rem;
-            box-shadow: 0 0 1.5rem #D4AF37;
+        }
+
+        .card {
 
             .card-title {
                 text-align: center;
@@ -86,6 +103,37 @@
                     color: #D4AF37;
                 }
             }
+            
         }
+
+        @include sm {
+            .squareTilt, .card {
+                width: 200px;
+            }
+        }
+        
+        @media (orientation: landscape) and (max-height: 414px) {
+            margin-top: 7rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (orientation: landscape) and (max-height: 375px) {
+            margin-top: 8.5rem;
+        }
+        
+        @media (orientation: landscape) and (max-height: 360px) {
+            margin-top: 10rem;
+        }
+        
+        @media (orientation: landscape) and (max-height: 280px) {
+            margin-top: 15rem;
+        }
+
+        @media (max-width: 280px) {
+            .squareTilt, .card {
+                width: 125px;
+            }
+        }
+        
     }
 }

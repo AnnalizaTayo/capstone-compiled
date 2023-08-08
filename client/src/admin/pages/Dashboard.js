@@ -1,4 +1,6 @@
-//import {useEffect} from 'react';
+import React, {useEffect} from 'react';
+import useAuth from '../utils/useAuth';
+import { useNavigate } from 'react-router-dom';
 import BarChartBox from "../components/barChartBox/BarChartBox";
 import BigChartBox from "../components/bigChartBox/BigChartBox";
 import ChartBox from "../components/chartBox/ChartBox";
@@ -14,10 +16,17 @@ import "../../assets/styles/admin/dashboard.scss";
 //import checkAuthPrivate from '../../utils/auth/authAuthPrivate';
 
 const Dashboard = () => {
-  /* useEffect(() => {
-    checkAuthPrivate();
-  }, []); */
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // Redirect to login page if not authenticated
+      navigate('/admin-dashboard/login');
+    } 
+  }, [isAuthenticated, navigate]);
+
+
   return (
     <div className='dashboard'>
       <div className="info">

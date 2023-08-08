@@ -4,6 +4,8 @@ import { BiSolidBusiness, BiSolidTShirt } from 'react-icons/bi';
 import { FaUserAlt, FaPowerOff } from 'react-icons/fa';
 import { TiGroup } from 'react-icons/ti';
 import "./menu.scss";
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../redux/reducers/authReducer';
 
 const menu = [
   {
@@ -29,59 +31,41 @@ const menu = [
     title: "lists",
     listItems: [
       {
-        id: 2,
+        id: 1,
         title: "Collections",
         url: "/admin-dashboard/collections",
         icon: <BiSolidTShirt/>,
       },
       {
-        id: 1,
+        id: 2,
         title: "Employees",
         url: "/admin-dashboard/users",
         icon: <FaUserAlt/>,
       },
       {
-        id: 1,
+        id: 3,
         title: "Subscribers",
         url: "/admin-dashboard/subscribers",
         icon: <TiGroup/>,
       },
       
     ],
-  },
-  {
-    id: 3,
-    title: "general",
-    listItems: [
-      /* {
-        id: 1,
-        title: "Elements",
-        url: "/",
-        icon: "element.svg",
-      }, */
-      /* {
-        id: 2,
-        title: "Notes",
-        url: "/",
-        icon: "/images/note.svg",
-      },
-      {
-        id: 3,
-        title: "Calendar",
-        url: "/",
-        icon: "/images/calendar.svg",
-      }, */
-      {
-        id: 4,
-        title: "Logout",
-        url: "/logout",
-        icon: <FaPowerOff/>,
-      },
-    ],
   }
 ];
 
-const Menu = () => { // Receive updateActivePage as a prop
+const Menu = () => {
+  const dispatch = useDispatch();
+
+  const handleLogout = async() => {
+    try {
+      await fetch('/users/logout', { method: 'POST' });
+      dispatch(logout());
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+    
+  }
+
   return (
     <div className="menu">
       {menu.map((item) => (
@@ -92,7 +76,6 @@ const Menu = () => { // Receive updateActivePage as a prop
               to={listItem.url}
               className="listItem"
               key={listItem.id}
-              /* onClick={() => updateActivePage(listItem.title)} */ // Call updateActivePage on link click
             >
               <div className="menu-icons">{listItem.icon}</div>
               <span className="listItemTitle">{listItem.title}</span>
@@ -100,6 +83,13 @@ const Menu = () => { // Receive updateActivePage as a prop
           ))}
         </div>
       ))}
+      <div className="item">
+        <span className="title">General</span>
+          <button className="listItem" onClick={handleLogout}>
+            <div className="menu-icons"><FaPowerOff/></div>
+            <span className="listItemTitle">Logout</span>
+          </button>
+      </div>
     </div>
   );
 };

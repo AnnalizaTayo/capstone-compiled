@@ -1,85 +1,81 @@
-import React, { /* useEffect, */ useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import '../../assets/styles/admin/login.scss';
-//import auth from '../../utils/auth/auth';
-//import checkAuth from "../../utils/auth/authChecker";
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../../redux/reducers/authReducer';
+import useAuth from '../utils/useAuth';
 
 const Login = () => {
-  const [email, /* setEmail */] = useState("");
-  const [password,/*  setPassword */] = useState("");
-  const [isError, /* setError */] = useState("");
-  //const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  // eslint-disable-next-line
+  const [accessToken, setAccessToken] = useState(null);
+  // eslint-disable-next-line
+  const [refreshToken, setRefreshToken] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [isError, setError] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  /* useEffect(() => {
-    setIsAuthenticated(checkAuth());
-    console.log('user is authenticated: '+isAuthenticated);
-    if(isAuthenticated){
-      window.location.href = '/';
-    }
-  }, [isAuthenticated]);
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-    setError('');
-    console.log(email);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-    setError('');
-    console.log(password);
-  }; */
+  useEffect(() => {
+    if (isAuthenticated) {
+      // Redirect to login page if not authenticated
+      navigate('/admin-dashboard');
+    } 
+  }, [isAuthenticated, navigate]);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  /* const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const emailInput = e.target.email.value;
-        const passwordInput = e.target.password.value;
-
-        // Call the login function with the provided email and password
-        const response = await auth(emailInput, passwordInput);
-
-        const { error } = response;
-
-        if (error) {
-          setError(error.message);
+        const response = await fetch('/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password, rememberMe  })
+        });
+        const data = await response.json();
+        console.log(data);
+        
+        if (response.ok) {
+            // Successful login, store user and tokens in sessionStorage
+            dispatch(loginSuccess(data.user, data.accessToken, data.refreshToken));
+            navigate('/admin-dashboard');
         } else {
-          // Login successful, clear the input fields
-          setEmail("");
-          setPassword("");
-          setError("");
-    
-          // Redirect to the desired page after successful login
-          window.location.href = '/';
+            // Handle login error.
+            console.log(data.message);
+            setError(data.message);
         }
-
     } catch (error) {
-        //console.error('Handle Login error:', error.message);
-        setError(error.message);
+      setError(error);
     }
-  }; */
+  };
 
   return (
     <main className="auth container">
       <div className="content">
+        <div className="squareTilt"></div>
         <div className="card">
           <div className="card-body">
             <h2 className="card-title">Login</h2>
-            {isError && <p className="error-message" style={{ color: 'red' }}>{isError}</p>}
-            <form /* onSubmit={handleLogin} */>
+            {isError? (<p className="error-message" style={{ color: 'red' }}>{isError}</p>) : ''}
+            <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="email">Email:</label>
                 <input
-                  type="email"
+                  type="text"
                   className="form-control"
-                  id="email"
-                  value={email}
-                  /* onChange={handleEmailChange} */
+                  id="username"
+                  autoComplete="off"
+                  onChange={(e) => setUsername(e.target.value)}
+                  value={username}
                   required
                 />
               </div>
@@ -89,14 +85,23 @@ const Login = () => {
                   type={passwordVisible ? 'text' : 'password'}
                   className="form-control"
                   id="password"
+                  onChange={(e) => setPassword(e.target.value)}
                   value={password}
-                  /* onChange={handlePasswordChange} */
                   required
                 />
                 <span className="eye-icon" onClick={togglePasswordVisibility} >
                   {passwordVisible ? <RiEyeLine /> : <RiEyeOffLine />}
                 </span>
               </div>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)}
+                /> Remember Me
+              </label>
+              <br/>
+              <br/>
               <button type="submit">Login</button>
             </form>
           </div>

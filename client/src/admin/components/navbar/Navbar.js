@@ -1,23 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import useAuth from '../../utils/useAuth';
 import "./navbar.scss";
 
+const capitalizeFirstLetter = (str) => {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 const Navbar = () => {
+  const { username } = useAuth();
   const [faviconUrl, setFaviconUrl] = useState('');
-  const [isCacheData, setCacheData] = useState({});
 
   useEffect(() => {
-    // Retrieve cacheData from localStorage
-    const cacheDataString = localStorage.getItem('cacheData');
-    
-    // Check if cacheDataString is not null before parsing as JSON
-    if (cacheDataString) {
-      setCacheData(JSON.parse(cacheDataString));
-    } else {
-      // If no data in localStorage, set the cacheData state to an empty object
-      setCacheData({});
-    }
-
     setFaviconUrl(process.env.REACT_APP_COMPANY_FAVICON);
   }, []); // Only run the effect once, when the component mounts
 
@@ -29,7 +24,7 @@ const Navbar = () => {
       </Link>
       <div className="icons">
         <div className="user">
-          <span>Hi {isCacheData.user ? isCacheData.user : 'User' } !</span>
+          <span><h3>Hi {username ? capitalizeFirstLetter(username) : 'User' } !</h3></span>
         </div>
         <Link to="/company?activateToggle=true">
           <img src="/image/settings.svg" alt="" className="icon" />

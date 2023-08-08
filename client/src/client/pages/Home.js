@@ -16,7 +16,6 @@ const Home = () => {
               </div>
               <button>INQUIRE NOW</button>
           </div>
-
       </div>
     </section>
   );

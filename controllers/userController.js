@@ -1,10 +1,17 @@
 const mongoose = require('mongoose');
 const User = require('../models/User');
 const Note = require('../models/Note');
-
+const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 
+mongoose.connect('mongodb://127.0.0.1:27017/houseofj')
+    .then(() => {
+        console.log('Connection Open.');
+    })
+    .catch(err => {
+        console.log(`Error: ${err}`);
+    })
 
 // @desc Get all users
 // @route GET /users
@@ -118,7 +125,40 @@ exports.deleteUser = asyncHandler(async (req, res) => {
 
 });
 
-exports.loginUser = asyncHandler(async (req, res) => {
-    req.flash('success', 'Welcome back!');
-    res.redirect('/listings');
-});
+exports.loginUser = (req, res) => {
+    
+    const user = req.user;
+    const { rememberMe } = req.body;
+
+    // Set token expiration times based on Remember Me checkbox
+    const accessTokenExpiration = rememberMe ? 7 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000;
+    const refreshTokenExpiration = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
+
+    const accessToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+        expiresIn: accessTokenExpiration,
+    });
+
+    const refreshToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+        expiresIn: refreshTokenExpiration,
+    });
+
+    const userWithoutPassword = {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role
+    };
+
+    // Set HTTP-only cookies
+    res.cookie('accessToken', accessToken, { httpOnly: true, maxAge: accessTokenExpiration });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: refreshTokenExpiration });
+
+    console.log(userWithoutPassword);
+    res.json({ message: 'Logged in successfully', user: userWithoutPassword, accessToken, refreshToken });
+}
+
+exports.logoutUser = (req, res) => {
+    res.cookie('accessToken', '', { expires: new Date(0), httpOnly: true });
+    res.cookie('refreshToken', '', { expires: new Date(0), httpOnly: true });
+    res.status(200).json({ message: 'Logout successful' });
+}

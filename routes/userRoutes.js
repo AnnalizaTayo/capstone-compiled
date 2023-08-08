@@ -9,8 +9,8 @@ router.route('/')
     .patch(usersController.updateUser)
     .delete(usersController.deleteUser);
 
-/* router.post('/register', usersController.createNewUser);
 
-router.post('/login', passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}),usersController.loginUser);
- */
+router.post('/login', passport.authenticate('local', {failureFlash: true}), usersController.loginUser);
+router.post('/logout', usersController.logoutUser);
+
 module.exports = router;
