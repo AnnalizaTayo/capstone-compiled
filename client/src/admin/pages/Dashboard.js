@@ -13,7 +13,6 @@ import {
   chartBoxUser,
 } from "../data";
 import "../../assets/styles/admin/dashboard.scss";
-//import checkAuthPrivate from '../../utils/auth/authAuthPrivate';
 
 const Dashboard = () => {
   const { isAuthenticated } = useAuth();

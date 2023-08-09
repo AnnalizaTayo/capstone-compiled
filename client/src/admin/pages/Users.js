@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import useAuth from '../utils/useAuth';
+import { useNavigate } from 'react-router-dom';
 import DataTable from "../components/dataTable/DataTable";
 import Form from "../components/dynamicForm/Form";
-//import checkAuthPrivate from "../../utils/auth/authAuthPrivate";
 //import postData from "../../utils/requests/postData";
 //import fetchData from "../../utils/requests/fetchData";
 import axios from "axios";
@@ -76,11 +77,16 @@ const Users = () => {
   const [data, setData] = useState([]);
   const [isUpdate , setIsUpdate] = useState(false);
   const [userId, setUserId] = useState('');
-
-  /* useEffect(() => {
-    checkAuthPrivate();
-  }, []); */
-
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // Redirect to login page if not authenticated
+      navigate('/admin-dashboard/login');
+    } 
+  }, [isAuthenticated, navigate]);
+  
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };

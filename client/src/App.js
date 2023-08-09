@@ -2,6 +2,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import FadeInContent from './client/components/FadeInContent';
 import './assets/styles/global/globalStyles.scss';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import {store, persistor} from './redux/store/store';
 
 //admin-side
 import Login from './admin/pages/Login';
@@ -41,7 +44,6 @@ const AdminLayout = ({ children }) => {
         </main>
         <footer ><Footer/></footer>
       </div>
-    
   );
 };
 
@@ -70,27 +72,33 @@ const FrontWhiteLayout = ({ children }) => {
 };
 
 function App() {
+
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Black Front */}
-        <Route path="/" element={<FrontBlackLayout><FadeInContent><Home /></FadeInContent></FrontBlackLayout>}/>
-        <Route path="/catalog" element={<FrontBlackLayout><FadeInContent><Catalog /></FadeInContent></FrontBlackLayout>}/>
-        <Route path="/contact" element={<FrontBlackLayout><FadeInContent><Contact /></FadeInContent></FrontBlackLayout>}/>
-        {/* White Front */}
-        <Route path="/about" element={<FrontWhiteLayout><FadeInContent><About /></FadeInContent></FrontWhiteLayout>}/>
-        <Route path="/faqs" element={<FrontWhiteLayout><FadeInContent><Faqs /></FadeInContent></FrontWhiteLayout>}/>
-        {/* Admin */}
-        <Route path="/admin-dashboard" element={<AdminLayout><Dashboard /></AdminLayout>}/>
-        <Route path="/admin-dashboard/collections" element={<AdminLayout><Collections /></AdminLayout>}/>
-        <Route path="/admin-dashboard/company" element={<AdminLayout><Company /></AdminLayout>}/>
-        <Route path="/admin-dashboard/subscribers" element={<AdminLayout><Subscribers /></AdminLayout>}/>
-        <Route path="/admin-dashboard/users" element={<AdminLayout><Users /></AdminLayout>}/>
-        <Route path="/admin-dashboard/faqlist" element={<AdminLayout><FaqsList /></AdminLayout>}/>
-        {/* Login */}
-        <Route path="/admin-dashboard/login" element={<Login />}/>
-      </Routes>
-    </BrowserRouter>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter>
+          <Routes>
+            {/* Black Front */}
+            <Route path="/" element={<FrontBlackLayout><FadeInContent><Home /></FadeInContent></FrontBlackLayout>}/>
+            <Route path="/catalog" element={<FrontBlackLayout><FadeInContent><Catalog /></FadeInContent></FrontBlackLayout>}/>
+            <Route path="/contact" element={<FrontBlackLayout><FadeInContent><Contact /></FadeInContent></FrontBlackLayout>}/>
+            {/* White Front */}
+            <Route path="/about" element={<FrontWhiteLayout><FadeInContent><About /></FadeInContent></FrontWhiteLayout>}/>
+            <Route path="/faqs" element={<FrontWhiteLayout><FadeInContent><Faqs /></FadeInContent></FrontWhiteLayout>}/>
+            {/* Admin */}
+            <Route path="/admin-dashboard" element={<AdminLayout><Dashboard /></AdminLayout>}/>
+            <Route path="/admin-dashboard/collections" element={<AdminLayout><Collections /></AdminLayout>}/>
+            <Route path="/admin-dashboard/company" element={<AdminLayout><Company /></AdminLayout>}/>
+            <Route path="/admin-dashboard/subscribers" element={<AdminLayout><Subscribers /></AdminLayout>}/>
+            <Route path="/admin-dashboard/users" element={<AdminLayout><Users /></AdminLayout>}/>
+            <Route path="/admin-dashboard/faqlist" element={<AdminLayout><FaqsList /></AdminLayout>}/>
+            {/* Login */}
+            <Route path="/admin-dashboard/login" element={<Login />}/>
+          </Routes>
+        </BrowserRouter>
+      </PersistGate>
+      
+    </Provider>
   );
 }
 

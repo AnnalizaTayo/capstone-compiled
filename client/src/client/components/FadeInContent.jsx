@@ -10,7 +10,7 @@ export default function FadeInContent({ children }) {
         const content = document.querySelector('.fade-in-transition');
         if (content) {
             content.style.opacity = '1';
-            fetch('http://localhost:5000/views', { credentials: 'include' }) 
+            fetch('/views', { credentials: 'include' }) 
                 .then(response => response.text())
                 .then(data => {
                     console.log(data); // Display the page view count in the console

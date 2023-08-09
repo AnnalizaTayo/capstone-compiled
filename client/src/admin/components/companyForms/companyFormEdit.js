@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './companyFormEdit.scss';
-import fetchData from '../../utils/requests/fetchData';
 
 
 const CompanyEditForm = () => {
     const [companyData, setCompanyData] = useState(null); 
     const [isToggleOn, setToggleOn] = useState(false);
     const [isSuccessPopupVisible, setIsSuccessPopupVisible] = useState(false);
+    const companyInfoUrl = '/company/info';
+    const companyUpdateUrl = '/company/update';
 
     const handleToggleForm = () => {
         setToggleOn((prevState) => !prevState);
@@ -18,13 +19,13 @@ const CompanyEditForm = () => {
     };
 
     useEffect(() => {
-        fetchData(process.env.REACT_APP_COMPANY_INFO)
+        fetch(companyInfoUrl)
             .then((result) => setCompanyData(result.data))
             .catch((error) => console.error('Error fetching data:', error)); 
     }, []);
     
       if (!companyData) {
-        return <div>Loading...</div>;
+        return <div>Loading...<br/><br/></div>;
       }
 
     const {
@@ -109,7 +110,7 @@ const CompanyEditForm = () => {
         
         console.log(...formData);
         // Send the updated company data to the backend API
-        axios.put(process.env.REACT_APP_COMPANY_UPDATE, formData)
+        axios.put(companyUpdateUrl, formData)
         .then((response) => {
             console.log('Company updated successfully:', response.data);
             setIsSuccessPopupVisible(true);

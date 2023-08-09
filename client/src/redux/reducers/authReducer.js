@@ -1,6 +1,5 @@
 import { persistor } from '../store/store';
 
-// Action creator for loginSuccess
 export const loginSuccess = (user, accessToken, refreshToken) => {
     return {
         type: 'LOGIN_SUCCESS',

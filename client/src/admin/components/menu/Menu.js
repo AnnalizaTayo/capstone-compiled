@@ -6,6 +6,7 @@ import { TiGroup } from 'react-icons/ti';
 import "./menu.scss";
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/reducers/authReducer';
+import { resetCompanyData  } from '../../../redux/reducers/compDataReducer';
 
 const menu = [
   {
@@ -60,6 +61,7 @@ const Menu = () => {
     try {
       await fetch('/users/logout', { method: 'POST' });
       dispatch(logout());
+      dispatch(resetCompanyData());
     } catch (error) {
       console.error('Logout failed', error);
     }

@@ -4,6 +4,7 @@ import '../../assets/styles/admin/login.scss';
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../redux/reducers/authReducer';
+import { setCompanyData } from '../../redux/reducers/compDataReducer';
 import useAuth from '../utils/useAuth';
 
 const Login = () => {
@@ -11,10 +12,6 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  // eslint-disable-next-line
-  const [accessToken, setAccessToken] = useState(null);
-  // eslint-disable-next-line
-  const [refreshToken, setRefreshToken] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isError, setError] = useState("");
   const dispatch = useDispatch();
@@ -29,6 +26,18 @@ const Login = () => {
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
+  };
+
+  const fetchCompanyData = async () => {
+    try {
+      const response = await fetch('/company/info'); // Change the URL to your API endpoint
+      const companyData = await response.json();
+
+      // Dispatch action to store the company data in Redux
+      dispatch(setCompanyData(companyData));
+    } catch (error) {
+      console.error('Error fetching company data:', error);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -47,6 +56,10 @@ const Login = () => {
         if (response.ok) {
             // Successful login, store user and tokens in sessionStorage
             dispatch(loginSuccess(data.user, data.accessToken, data.refreshToken));
+
+            // Fetch and store company data after successful login
+            fetchCompanyData();
+
             navigate('/admin-dashboard');
         } else {
             // Handle login error.
@@ -54,7 +67,7 @@ const Login = () => {
             setError(data.message);
         }
     } catch (error) {
-      setError(error);
+      setError('Something went wrong');
     }
   };
 
@@ -65,7 +78,7 @@ const Login = () => {
         <div className="card">
           <div className="card-body">
             <h2 className="card-title">Login</h2>
-            {isError? (<p className="error-message" style={{ color: 'red' }}>{isError}</p>) : ''}
+            {isError && <p className="error-message" style={{ color: 'red' }}>{isError}</p>}
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="email">Email:</label>

@@ -1,21 +1,9 @@
-const mongoose = require('mongoose');
 const User = require('../models/User');
 const Note = require('../models/Note');
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 
-mongoose.connect('mongodb://127.0.0.1:27017/houseofj')
-    .then(() => {
-        console.log('Connection Open.');
-    })
-    .catch(err => {
-        console.log(`Error: ${err}`);
-    })
-
-// @desc Get all users
-// @route GET /users
-// @access Private
 exports.getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find().select('-password').lean();
     if(!users?.length) {
@@ -24,9 +12,6 @@ exports.getAllUsers = asyncHandler(async (req, res) => {
     res.json(users);
 });
 
-// @desc Create new user
-// @route POST /users
-// @access Private
 exports.createNewUser = asyncHandler(async (req, res) => {
     try {
         const { email, username, password, role, firstName, lastName } = req.body;
@@ -59,9 +44,6 @@ exports.createNewUser = asyncHandler(async (req, res) => {
     }
 });
 
-// @desc Update a user
-// @route PATCH /users
-// @access Private
 exports.updateUser = asyncHandler(async (req, res) => {
     const { id , email, username, password, role, firstName, lastName } = req.body
     if (!id || !username || !role || !firstName || !lastName) {
@@ -97,9 +79,6 @@ exports.updateUser = asyncHandler(async (req, res) => {
 
 });
 
-// @desc Delete a user
-// @route DELETE /users
-// @access Private
 exports.deleteUser = asyncHandler(async (req, res) => {
     const { id } = req.body;
     if (!id) {

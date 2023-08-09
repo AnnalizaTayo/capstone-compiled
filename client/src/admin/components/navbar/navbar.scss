@@ -71,7 +71,10 @@
     }
   }
 
-  @media (max-width: 300px) {
+  @include sm {
     display: block;
+    h3 {
+      display: none;
+    }
   }
 }

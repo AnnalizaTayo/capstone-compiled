@@ -11,7 +11,6 @@ const cookieParser = require('cookie-parser');
 const connectDB = require('../config/dbConn');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/User');
@@ -44,6 +43,8 @@ app.use(cookieParser());
 app.use('/', express.static(path.join(__dirname, '../public')));
 
 app.use('/', require('../routes/root'));
+app.use('/company', require('../routes/companyRoutes'));
+app.use('/', require('../routes/productsRoutes'));
 
 const sessionOption = {
   secret: process.env.SECRET_KEY,
@@ -57,36 +58,28 @@ const sessionOption = {
 
 app.use(session(sessionOption));
 
-app.get('/views', async(req, res, next) => {
-  if (!req.session.pageViews) {
-    req.session.pageViews = 1;
-  } else {
-    req.session.pageViews++;
-  }
-  res.send(`You have viewed this page ${req.session.count} times.`);
+app.get('/views', async (req, res, next) => {
   try {
-    // Update MongoDB with the latest page view count
+    if (!req.session.pageViews) {
+      req.session.pageViews = 1;
+    } else {
+      req.session.pageViews++;
+    }
+
     const doc = await PageView.findOneAndUpdate(
-        { sessionId: req.session.id },
-        { $set: { pageViews: req.session.pageViews } },
-        { upsert: true, new: true }
+      { sessionId: req.session.id },
+      { $set: { pageViews: req.session.pageViews } },
+      { upsert: true, new: true }
     );
+    
     console.log('Updated page views in MongoDB:', doc);
+    res.send(`You have viewed this site ${req.session.pageViews} times.`);
   } catch (err) {
-      console.error('Error updating page views in MongoDB:', err);
+    console.error('Error updating page views in MongoDB:', err);
+    res.status(500).send('An error occurred while updating page views.');
   }
-
-  next();
-})
-
-app.use(flash());
-
-//this will request for the approriate flash message of the function and respond
-app.use((req, res, next) => {
-  res.locals.success = req.flash('success');
-  res.locals.error = req.flash('error');
-  next();
 });
+
 
 //Passport Configuration
 app.use(passport.initialize());
