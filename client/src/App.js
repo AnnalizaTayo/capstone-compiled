@@ -50,7 +50,7 @@ const AdminLayout = ({ children }) => {
 const FrontBlackLayout = ({ children }) => {
   return (
     <div className="front-black">
-      <main className='fade-in-transition'>
+      <main className='fade-in-transition footerStyle'>
         <Navbar/>
         {children}
       </main>
@@ -62,7 +62,7 @@ const FrontBlackLayout = ({ children }) => {
 const FrontWhiteLayout = ({ children }) => {
   return (
     <div className="front-white">
-      <main className='fade-in-transition'>
+      <main className='fade-in-transition footerStyle'>
         <Navbar/>
         {children}
       </main>
@@ -72,7 +72,6 @@ const FrontWhiteLayout = ({ children }) => {
 };
 
 function App() {
-
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -97,7 +96,6 @@ function App() {
           </Routes>
         </BrowserRouter>
       </PersistGate>
-      
     </Provider>
   );
 }

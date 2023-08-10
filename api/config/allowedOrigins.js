@@ -1,6 +1,5 @@
 const allowedOrigins = [
-    'http://localhost:3000',
-    'https://google.com.ph'
+    'http://localhost:5001'
 ];
 
 module.exports = allowedOrigins;

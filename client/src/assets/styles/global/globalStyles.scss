@@ -9,6 +9,58 @@
     padding: 0;
 }
 
+.message, .message1 {
+    margin: 1rem;
+    border: 1px solid transparent;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 0.25rem;
+}
+
+@include sm {
+    .message1 {
+        display: none;
+    }
+}
+
+.success-message {
+    margin: 1rem auto;
+    color: #5cb85c;
+    border: 1px solid #5cb85c;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 0.25rem;
+    width: 100%;
+    font-family: 'Karma';
+    text-align: center;
+}
+
+.warning-meesage {
+    margin: 1rem auto;
+    color: #f0ad4e;
+    border: 1px solid #f0ad4e;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 0.25rem;
+    width: 100%;
+    font-family: 'Karma';
+    text-align: center;
+}
+
+.error-message {
+    margin: 1rem auto;
+    color: #d9534f;
+    border: 1px solid #d9534f;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 0.25rem;
+    width: 100%;
+    font-family: 'Karma';
+    text-align: center;
+}
+
+
+
 .front-black , .front-white {
     font-family: Kaushan Script;
     background-color: $black-color;
@@ -61,6 +113,15 @@
                     padding: 0.5rem;
                     border: 4px solid $primary-color;
                 }
+
+                button {
+                    background-color: transparent;
+                    border: none;
+                }
+                
+                button:hover {
+                    cursor: pointer;
+                }
             }        
         }
         
@@ -101,6 +162,7 @@
                             border: 1px solid $black-color;
                             border-radius: 0 5px 5px 0;
                         }
+
                     }
                 }
             }
@@ -283,6 +345,14 @@
                 }
             }      
             
+        }
+
+
+    }
+
+    @media (orientation:portrait) {
+        main {
+            min-height: calc(100vh - 286px);
         }
     }
 }

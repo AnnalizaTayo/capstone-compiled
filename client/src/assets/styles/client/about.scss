@@ -1,8 +1,9 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Karma:wght@300&family=Kaushan+Script&display=swap');
 
 /*
 * Styles for Mobile
 */
+
 .about-circle-text {
     margin: 0;
     background-color: #1c1c1c;
@@ -67,7 +68,6 @@
 }
 
 .about-overview-header {
-    font-family: Kaushan Script;
     color: #F2EDDB;
     position: relative;
     margin-top: 4.5rem;
@@ -82,16 +82,50 @@
     font-size: 1rem;
     color: #F2EDDB;
     padding-top: 90px;
+    font-family: 'Karma';
+    text-align: center;
 }
 
 .about-overview-logo-text {
     position: relative;
     padding: 1rem 3rem 1rem 3rem;
-    font-size: 1rem;
+    font-size: 1.25rem;
     color: #F2EDDB;
     opacity: 0;
     transition: ease-in;
     animation: fadeIn 0.5s ease-in forwards;
+    font-family: 'Karma';
+    text-align: center;
+}
+
+@media (max-width: 992px) {
+    .about-overview-header {
+        margin-top: 4rem;
+        font-size: 1.5rem;
+    }
+
+    .about-overview-logo-text {
+        padding: 0.5rem 3rem 1rem 3rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .about-overview-header {
+        margin-top: 4rem;
+        font-size: 1.5rem;
+    }
+
+    .about-overview-logo-text {
+        padding: 0.5rem 2rem 1rem;
+        font-size: 1rem;
+    }
+
+    .about-overview-text {
+        padding: 1rem 2rem 1rem;
+        font-size: 1rem;
+        margin-top: 4.5rem;
+    }
 }
 
 .about-overview-container {
@@ -105,10 +139,11 @@
 
 .background-overlay {
     background-color: #1c1c1c;
-    opacity: 0.75;
+    opacity: 0.8;
     position: absolute;
     height: 100%;
     width: 100%;
+    border-radius: 5px;
 }
 
 .order-1 {

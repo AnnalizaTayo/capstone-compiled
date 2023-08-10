@@ -28,11 +28,7 @@ connectDB();
 
 app.use(logger);
 
-app.use(cors(/* {
-  origin: "http://localhost:3000",
-  methods: "GET, POST, PUT, DELETE",
-  credentials: true
-} */));
+app.use(cors(corsOptions));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -44,7 +40,9 @@ app.use('/', express.static(path.join(__dirname, '../public')));
 
 app.use('/', require('../routes/root'));
 app.use('/company', require('../routes/companyRoutes'));
-app.use('/', require('../routes/productsRoutes'));
+app.use('/users', require('../routes/userRoutes'));
+app.use('/subs', require('../routes/subscribersRoutes'));
+app.use('/products', require('../routes/productsRoutes'));
 
 const sessionOption = {
   secret: process.env.SECRET_KEY,
@@ -88,9 +86,6 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-
-app.use('/users', require('../routes/userRoutes'));
 
 app.all('*', (req, res) => {
   res.status(404);

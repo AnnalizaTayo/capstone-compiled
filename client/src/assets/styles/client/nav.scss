@@ -99,11 +99,15 @@ nav {
     background: rgba(0, 0, 0, 0.8);
     position: fixed;
     overflow: scroll;
+    isolation: isolate;
+    z-index: 10;
+    color: white;
 
     .toggle-icon {
       position: fixed;
       z-index: 1;
     }
+
     .links{
       position: absolute;
       top: 120px;
@@ -116,9 +120,10 @@ nav {
       opacity: 1;
       padding-bottom: 2rem;
 
-      li {
+      li a {
         margin: 15px 0;
         font-size: 24px;
+        color: white;
       }
     }
   }

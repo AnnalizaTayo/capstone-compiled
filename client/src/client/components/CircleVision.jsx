@@ -1,4 +1,35 @@
+import React, { useEffect, useState } from 'react';
+
 export default function CircleVision(props) {
+    const [companyInfo, setCompanyInfo] = useState({});
+    
+    const checkData = async() => {
+        await fetch(`${process.env.REACT_APP_API}/company/info-noimages`)
+            .then(response => {
+                if (!response.ok) {
+                throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                sessionStorage.setItem('companyInfo', JSON.stringify(data));
+                setCompanyInfo(data);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+    
+    useEffect(() => {
+        const data = JSON.parse(sessionStorage.getItem('companyInfo'));
+        if(!data) {
+            checkData();
+        } else {
+            setCompanyInfo(data);
+        }
+
+    },[]);
+
     return (
         <div className={props.active === 'inactive' ? 'about-circle-container-inactive' : 'about-circle-container'}>
             <div className='about-text-container'>
@@ -8,7 +39,7 @@ export default function CircleVision(props) {
                 <div className="about-overview-container">
                     <div className='background-overlay'></div>
                     <div className="about-overview-text">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sapiente consequuntur iste excepturi repellat quisquam illo sequi cum eveniet voluptatibus dolorum, nam in, eius rem quo quos fugit praesentium illum suscipit.
+                        {companyInfo.vision}
                     </div>
                 </div>
                 :

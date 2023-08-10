@@ -1,5 +1,4 @@
 const User = require('../models/User');
-const Note = require('../models/Note');
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
@@ -85,12 +84,7 @@ exports.deleteUser = asyncHandler(async (req, res) => {
         return res.status(400).json({message:'User ID Required'});
     }
 
-    const note = await Note.findOne({ user: id}).lean().exec();
-    if (note){
-        return res.status(400).json({ message: 'User has assigned notes'});
-    }
-
-    const user = await User. findById(id).exec();
+    const user = await User.findById(id).exec();
 
     if(!user){
         return res.status(400).json({ message: 'User not Found'});
