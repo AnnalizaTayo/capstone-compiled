@@ -86,24 +86,30 @@ function Contact() {
                   <h1>House of J</h1>
                   <ul className='address'>
                       <li>
-                        <span className="icons">
-                          <FontAwesomeIcon icon={faLocationDot} size="xl" style={{color: "#ffffff",}} /> 
-                        </span>
-                        <p>{companyContact.address}</p> 
+                        <a href="#map">
+                          <span className="icons">
+                            <FontAwesomeIcon icon={faLocationDot} size="xl" style={{color: "#ffffff",}} /> 
+                          </span>
+                          <p>{companyContact.address}</p> 
+                        </a>
                       </li>
 
                       <li>
-                        <span className="icons">
-                          <FontAwesomeIcon icon={faMobileScreenButton} size="xl" style={{color: "#ffffff",}} />
-                        </span>
-                        <p>{companyContact.mobileNumber}</p>
+                        <a href={`tel:${companyContact? companyContact.mobileNumber : null}`}>
+                          <span className="icons">
+                            <FontAwesomeIcon icon={faMobileScreenButton} size="xl" style={{color: "#ffffff",}} />
+                          </span>
+                          <p>{companyContact.mobileNumber}</p>
+                        </a>
                       </li>
 
                       <li>
-                        <span className="icons">
-                          <FontAwesomeIcon icon={faEnvelope} size="xl" style={{color: "#ffffff",}} />
-                        </span>
-                        <p>{companyContact.email}</p>
+                        <a href={`mailto:${companyContact? companyContact.email : null}?subject=Inquiry`}>
+                          <span className="icons">
+                            <FontAwesomeIcon icon={faEnvelope} size="xl" style={{color: "#ffffff",}} />
+                          </span>
+                          <p>{companyContact.email}</p>
+                        </a>
                       </li>
                   </ul>
               </div>
@@ -135,7 +141,7 @@ function Contact() {
             </form>
           </div>
         </div>
-        <div className='map'>
+        <div className='map' id="map">
           <iframe
             title="Google Map - 72 Malvar Road, Puerto Princesa, Palawan"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3932.2817075126336!2d118.7317337756791!3d9.742188077416532!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33b563da4b42e63f%3A0xb9de13ec4f1aaf81!2s72%20Malvar%20Road%2C%20Puerto%20Princesa%2C%205300%20Palawan!5e0!3m2!1sen!2sph!4v1691606163133!5m2!1sen!2sph"
