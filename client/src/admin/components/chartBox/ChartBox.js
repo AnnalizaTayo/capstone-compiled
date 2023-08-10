@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import "./chartBox.scss";
 import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts";
 
@@ -8,13 +7,10 @@ const ChartBox = (props) => {
     <div className="chartBox">
       <div className="boxInfo">
         <div className="title">
-          <img src={props.icon} alt="" />
+          {props.icon}
           <span>{props.title}</span>
         </div>
         <h1>{props.number}</h1>
-        <Link to="/" style={{ color: props.color }}>
-          View all
-        </Link>
       </div>
       <div className="chartInfo">
         <div className="chart">
@@ -36,13 +32,7 @@ const ChartBox = (props) => {
           </ResponsiveContainer>
         </div>
         <div className="texts">
-          <span
-            className="percentage"
-            style={{ color: props.percentage < 0 ? "tomato" : "limegreen" }}
-          >
-            {props.percentage}%
-          </span>
-          <span className="duration">this month</span>
+          <span className="duration">This week</span>
         </div>
       </div>
     </div>

@@ -36,6 +36,8 @@ nav {
     display: none
   }
 
+  
+
   @media(max-width: 768px){
     position: relative;
     transition: 0.5s all ease-in-out;
@@ -127,4 +129,12 @@ nav {
       }
     }
   }
+}
+
+@media (max-width: 775px) {
+  nav.navbar {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
 }

@@ -11,9 +11,9 @@ const Company = () => {
   const [ companyData, setCompanyData ] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const logoURL = '/company/logo';
-  const highlightURL = '/company/highlight';
-  const companyInfo = '/company/info';
+  const logoURL = process.env.REACT_APP_API+'/company/logo';
+  const highlightURL = process.env.REACT_APP_API+'/company/highlight';
+  const companyInfo = process.env.REACT_APP_API+'/company/info';
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -31,7 +31,7 @@ const Company = () => {
         .then((data) => setCompanyData(data))
         .catch((error) => console.error("Error fetching data:", error)); 
     }
-  }, [companyData, isAuthenticated, navigate]);
+  }, [companyData, companyInfo, isAuthenticated, navigate]);
 
   if (isLoading) {
     return (

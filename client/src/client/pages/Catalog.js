@@ -2,6 +2,7 @@ import React from 'react';
 import logoA from '../../assets/imgs/pretaporter.svg';
 import logoC from '../../assets/imgs/customoutfits.svg';
 import logoB from '../../assets/imgs/accs.svg';
+import Gallery from '../components/Gallery';
 import '../../assets/styles/client/catalog.scss';
 
 export default function Catalog(){
@@ -16,8 +17,8 @@ export default function Catalog(){
                           <img src={logoA} alt='pretaporter'/>
                           <img src={logoC} alt='imgscustomoutfits'/>
                           <div className='onetext'>
-                              <h1>Pret-A-Porter</h1>
-                              <h1>Custom Outfits</h1>
+                              <h1 className='pret'>Pret-A-Porter</h1>
+                              <h1 className='custom'>Custom Outfits</h1>
                           </div>
                       </div>
                       <div className='two'>
@@ -29,8 +30,9 @@ export default function Catalog(){
       )
   }
   return(
-      <>
-      < Offer />
-      </>
+    <>
+    < Offer />
+    < Gallery />
+    </>
   )
 }

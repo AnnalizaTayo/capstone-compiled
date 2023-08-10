@@ -30,7 +30,7 @@ const Login = () => {
 
   const fetchCompanyData = async () => {
     try {
-      const response = await fetch('/company/info'); // Change the URL to your API endpoint
+      const response = await fetch(process.env.REACT_APP_API+'/company/info'); // Change the URL to your API endpoint
       const companyData = await response.json();
 
       // Dispatch action to store the company data in Redux
@@ -43,7 +43,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await fetch('/users/login', {
+        const response = await fetch(process.env.REACT_APP_API+'/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -98,6 +98,7 @@ const Login = () => {
                   type={passwordVisible ? 'text' : 'password'}
                   className="form-control"
                   id="password"
+                  autoComplete="off"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
                   required

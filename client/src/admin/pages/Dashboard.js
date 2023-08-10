@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect,useState} from 'react';
 import useAuth from '../utils/useAuth';
 import { useNavigate } from 'react-router-dom';
 import BarChartBox from "../components/barChartBox/BarChartBox";
@@ -13,17 +13,38 @@ import {
   chartBoxUser,
 } from "../data";
 import "../../assets/styles/admin/dashboard.scss";
+import { FaUserAlt } from 'react-icons/fa';
+import { fetchSubscriberData } from '../utils/dataCollection/totalSubs';
+import { fetchWeeklyView } from '../utils/dataCollection/weeklyViews';
+
+
+
+
 
 const Dashboard = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  
+  const [totalSubs, setTotalSubs] = useState(null);
+  const [weeklyViews, setweeklyViews] = useState(null);
+
   useEffect(() => {
     if (!isAuthenticated) {
       // Redirect to login page if not authenticated
       navigate('/admin-dashboard/login');
     } 
   }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    fetchSubscriberData()
+        .then(data => setTotalSubs(data))
+        .catch(error => console.error('Error initializing component:', error));
+}, []);
+
+useEffect(() => {
+  fetchWeeklyView()
+      .then(data => setweeklyViews(data))
+      .catch(error => console.error('Error initializing component:', error));
+}, []);
 
 
   return (
@@ -34,10 +55,10 @@ const Dashboard = () => {
       </div>
       <div className="dash">
         <div className="box box1">
-          <ChartBox {...chartBoxUser} />
+          <ChartBox {...totalSubs} />
         </div>
         <div className="box box2">
-          <ChartBox {...chartBoxProduct} />
+          <ChartBox {...weeklyViews} />
         </div>
         <div className="box box3">
           <TopBox />
