@@ -12,5 +12,6 @@ router.route('/')
 
 router.post('/login', passport.authenticate('local'), usersController.loginUser);
 router.post('/logout', usersController.logoutUser);
+router.post('/:userId', usersController.getOneUserById);
 
 module.exports = router;

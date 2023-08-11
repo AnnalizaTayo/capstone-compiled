@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './companyFormEdit.scss';
+import useAuth from '../../utils/useAuth';
+import { setCompanyData } from '../../../redux/reducers/compDataReducer';
+import { useDispatch } from 'react-redux';
 
 
 const CompanyEditForm = () => {
-    const [companyData, setCompanyData] = useState(null); 
+    const { companyData } = useAuth();
+    const [isCompanyData, setLocalCompanyData] = useState(null);
     const [isToggleOn, setToggleOn] = useState(false);
     const [isSuccessPopupVisible, setIsSuccessPopupVisible] = useState(false);
-    const companyInfoUrl = '/company/info';
-    const companyUpdateUrl = '/company/update';
+    const [isError, setError] = useState();
+    const dispatch = useDispatch();
 
     const handleToggleForm = () => {
         setToggleOn((prevState) => !prevState);
@@ -19,24 +23,22 @@ const CompanyEditForm = () => {
     };
 
     useEffect(() => {
-        fetch(companyInfoUrl)
-            .then((result) => setCompanyData(result.data))
-            .catch((error) => console.error('Error fetching data:', error)); 
-    }, []);
+        setLocalCompanyData(companyData);
+    }, [companyData]);
     
-      if (!companyData) {
-        return <div>Loading...<br/><br/></div>;
-      }
+    if (!companyData && !isCompanyData) {
+    return <div>Loading...</div>;
+    }
 
     const {
         // eslint-disable-next-line
-        companyLogo,
         contact,
-        about,
-        mission,
-        vision,
         // eslint-disable-next-line
-        highlightCollection,
+        about,
+        // eslint-disable-next-line
+        mission,
+        // eslint-disable-next-line
+        vision
     } = companyData;
     
     // Check if the contact object is defined before accessing its properties
@@ -48,18 +50,18 @@ const CompanyEditForm = () => {
     
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setCompanyData((prevCompany) => ({
+        setLocalCompanyData((prevCompany) => ({
         ...prevCompany,
         [name]: value,
         }));
         console.log(`handleChange`);
-        console.log(companyData);
+        console.log(isCompanyData);
         console.log(`handleChange`);
     };
     
     const handleContactChange = (event) => {
         const { name, value } = event.target;
-        setCompanyData((prevCompany) => ({
+        setLocalCompanyData((prevCompany) => ({
         ...prevCompany,
         contact: {
             ...prevCompany.contact,
@@ -67,57 +69,65 @@ const CompanyEditForm = () => {
         },
         }));
         console.log(`handleContactChange`);
-        console.log(companyData);
+        console.log(isCompanyData);
         console.log(`handleContactChange`);
     };
     
     const handleLogoChange = (event) => {
         const file = event.target.files[0];
-        setCompanyData((prevCompany) => ({
+        setLocalCompanyData((prevCompany) => ({
         ...prevCompany,
         companyLogo: file,
         }));
         console.log(`handleLogoChange`);
-        console.log(companyData);
+        console.log(isCompanyData);
         console.log(`handleLogoChange`);
     };
     
     const handleHighlightCollectionChange = (event) => {
         const file = event.target.files[0];
-        setCompanyData((prevCompany) => ({
+        setLocalCompanyData((prevCompany) => ({
         ...prevCompany,
         highlightCollection: file,
         })
         );
         console.log(`handleHighlightCollectionChange`);
-        console.log(companyData);
+        console.log(isCompanyData);
         console.log(`handleHighlightCollectionChange`);
     };
     
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData();
-        formData.append('about', companyData.about);
-        formData.append('mission', companyData.mission);
-        formData.append('vision', companyData.vision);
-        formData.append('email', companyData.contact.email);
-        formData.append('landLineNumber', companyData.contact.landLineNumber);
-        formData.append('mobileNumber', companyData.contact.mobileNumber);
-        formData.append('website', companyData.contact.website);
-        formData.append('address', companyData.contact.address);
-        formData.append('companyLogo', companyData.companyLogo);
-        formData.append('highlightCollection', companyData.highlightCollection);
+        formData.append('about', isCompanyData.about);
+        formData.append('mission', isCompanyData.mission);
+        formData.append('vision', isCompanyData.vision);
+        formData.append('email', isCompanyData.contact.email);
+        formData.append('landLineNumber', isCompanyData.contact.landLineNumber);
+        formData.append('mobileNumber', isCompanyData.contact.mobileNumber);
+        formData.append('website', isCompanyData.contact.website);
+        formData.append('address', isCompanyData.contact.address);
+        formData.append('companyLogo', isCompanyData.companyLogo);
+        formData.append('highlightCollection', isCompanyData.highlightCollection);
         
         console.log(...formData);
         // Send the updated company data to the backend API
-        axios.put(companyUpdateUrl, formData)
+        axios.put(process.env.REACT_APP_API+'/company/update', formData)
         .then((response) => {
-            console.log('Company updated successfully:', response.data);
-            setIsSuccessPopupVisible(true);
-            setToggleOn(false);
+            if(response.ok) {
+                const data = response.data;
+                console.log('Company updated successfully:', data.company);
+                dispatch(setCompanyData(response.data.company));
+                setIsSuccessPopupVisible(true);
+                setToggleOn(false);
+            } else {
+                setError(response.message);
+            }
+
             // Optionally, you can redirect to a success page or perform any other actions here
         })
         .catch((error) => {
+            setError(error)
             console.error('Error updating company data:', error);
         });
     };
@@ -131,6 +141,7 @@ const CompanyEditForm = () => {
                         <button className='close' onClick={handleToggleForm}>&times;</button>
                         <h1>Edit House of J's infomation</h1>
                         <form onSubmit={handleSubmit}>
+                        {isError && <p className="error-message" style={{ color: 'red' }}>{isError}</p>}
                             <label>
                             Company Logo:
                             <input
@@ -148,7 +159,6 @@ const CompanyEditForm = () => {
                                 name="email"
                                 defaultValue={email}
                                 onChange={handleContactChange}
-                                required
                             />
                             </label>
                             <br />
@@ -197,7 +207,6 @@ const CompanyEditForm = () => {
                                 name="about"
                                 defaultValue={about}
                                 onChange={handleChange}
-                                required
                             />
                             </label>
                             <br />

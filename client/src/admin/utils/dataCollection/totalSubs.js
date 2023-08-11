@@ -7,7 +7,7 @@ export const fetchSubscriberData = async() => {
         .then(data => {
             const dailyData = data.chartData; // Assuming this property holds your daily subscriber data
             const totalSubs = {
-                color: "#8884d8",
+                color: "#C8A763",
                 icon: <FaUserAlt />,
                 title: "Subscribers",
                 number: data.totalWeeklySubs !== null ? data.totalWeeklySubs.toString() : "Loading...",
@@ -17,6 +17,7 @@ export const fetchSubscriberData = async() => {
                     subs: dayData.subs, // Assuming 'subscribers' is a property in your dailyData
                 })),
             };
+            console.log(totalSubs.chartData);
             return totalSubs;
         })
         .catch(error => {
@@ -24,4 +25,5 @@ export const fetchSubscriberData = async() => {
             throw error;
         });
 };
+
 

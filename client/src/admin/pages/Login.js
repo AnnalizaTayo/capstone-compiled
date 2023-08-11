@@ -22,6 +22,7 @@ const Login = () => {
       // Redirect to login page if not authenticated
       navigate('/admin-dashboard');
     } 
+    
   }, [isAuthenticated, navigate]);
 
   const togglePasswordVisibility = () => {
@@ -81,7 +82,7 @@ const Login = () => {
             {isError && <p className="error-message" style={{ color: 'red' }}>{isError}</p>}
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="email">Email:</label>
+                <label htmlFor="email">Username:</label>
                 <input
                   type="text"
                   className="form-control"

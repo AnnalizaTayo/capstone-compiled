@@ -6,26 +6,38 @@ import BigChartBox from "../components/bigChartBox/BigChartBox";
 import ChartBox from "../components/chartBox/ChartBox";
 import TopBox from "../components/topBox/TopBox";
 import {
-  barChartBoxVisit,
-  chartBoxConversion,
-  chartBoxProduct,
   chartBoxRevenue,
-  chartBoxUser,
 } from "../data";
 import "../../assets/styles/admin/dashboard.scss";
-import { FaUserAlt } from 'react-icons/fa';
 import { fetchSubscriberData } from '../utils/dataCollection/totalSubs';
 import { fetchWeeklyView } from '../utils/dataCollection/weeklyViews';
+import { fetchWeeklyVisit } from '../utils/dataCollection/weeklyVisits';
 
 
+const combineChartDataByDay = (chartDataArray) => {
+  const combinedData = {};
 
+  chartDataArray.forEach((chartData) => {
+    chartData.chartData.forEach((dataPoint) => {
+      const { name, [chartData.dataKey]: value } = dataPoint;
+      if (!combinedData[name]) {
+        combinedData[name] = { name };
+      }
+      combinedData[name][chartData.dataKey] = value;
+    });
+  });
+
+  return Object.values(combinedData);
+};
 
 
 const Dashboard = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [totalSubs, setTotalSubs] = useState(null);
-  const [weeklyViews, setweeklyViews] = useState(null);
+  const [totalVisits, setTotalVisits] = useState(null);
+  const [totalViews, setweeklyViews] = useState(null);
+  const [analyticsData, setAnalyticsData] = useState(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -36,16 +48,38 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchSubscriberData()
-        .then(data => setTotalSubs(data))
+        .then(data => {setTotalSubs(data)})
         .catch(error => console.error('Error initializing component:', error));
-}, []);
+        
+    fetchWeeklyVisit()
+        .then(data => setTotalVisits(data))
+        .catch(error => console.error('Error initializing component:', error));
+        
+    fetchWeeklyView()
+        .then(data => setweeklyViews(data))
+        .catch(error => console.error('Error initializing component:', error));
 
-useEffect(() => {
-  fetchWeeklyView()
-      .then(data => setweeklyViews(data))
-      .catch(error => console.error('Error initializing component:', error));
-}, []);
+    Promise.all([
+      fetchSubscriberData(),
+      fetchWeeklyVisit(),
+      fetchWeeklyView(),
+    ])
+      .then(([subsData, visitsData, viewsData]) => {
+        setTotalSubs(subsData);
+        setTotalVisits(visitsData);
+        setweeklyViews(viewsData);
 
+        // Combine the chart data
+        const combinedChartData = combineChartDataByDay([viewsData, visitsData, subsData]);
+        setAnalyticsData(combinedChartData);
+      })
+      .catch((error) => console.error('Error initializing component:', error));
+  }, []);
+
+  if (analyticsData) {
+    console.log(analyticsData);
+  }
+  
 
   return (
     <div className='dashboard'>
@@ -58,22 +92,19 @@ useEffect(() => {
           <ChartBox {...totalSubs} />
         </div>
         <div className="box box2">
-          <ChartBox {...weeklyViews} />
+          <ChartBox {...totalViews} />
         </div>
         <div className="box box3">
           <TopBox />
         </div>
         <div className="box box4">
-          <ChartBox {...chartBoxConversion} />
-        </div>
-        <div className="box box5">
-          <ChartBox {...chartBoxRevenue} />
+          <ChartBox {...totalVisits} />
         </div>
         <div className="box box6">
-          <BigChartBox />
+          <BigChartBox data={analyticsData}/>
         </div>
         <div className="box box7">
-          <BarChartBox {...barChartBoxVisit} />
+          <BarChartBox {...totalViews} />
         </div>
       </div>
     </div>

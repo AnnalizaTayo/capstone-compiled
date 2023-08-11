@@ -49,6 +49,7 @@ const Form = ({ isUpdate, slug, columns, setOpen, onFormSubmit, handleChange, fo
           <button type="submit">{uploading ? "Uploading..." : `${isUpdate ? "Update " : "Add new "}${slug}`}</button>
         </form>
       </div>
+      <div className="background" onClick={() => setOpen(false)}></div>
     </div>
   );
 };

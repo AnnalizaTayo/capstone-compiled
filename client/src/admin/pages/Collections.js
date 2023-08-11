@@ -4,10 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import DataTable from "../components/dataTable/DataTable";
 import "../../assets/styles/admin/collections.scss";
 import Form from "../components/dynamicForm/Form";
-/* import { products } from "../../data"; */
-//import postData from "../../utils/requests/postData";
-//import fetchData from "../../utils/requests/fetchData";
 import axios from "axios";
+import { FiRefreshCcw } from 'react-icons/fi';
 
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
@@ -83,8 +81,9 @@ const Collections = () => {
   const [uploading, setUploading] = useState(false);
   const [data, setData] = useState([]);
   const [isUpdate , setIsUpdate] = useState(false);
-  const [/* product */, setProduct] = useState(null);
+  const [product, setProduct] = useState(null);
   const [prodId, setProdId] = useState('');
+  const [isError, setError] = useState();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
@@ -97,51 +96,59 @@ const Collections = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError('');
   };
 
   const onFileChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+    setError('');
+  };
+
+  // Function to fetch data from the server and format it
+  const fetchDataFromServer = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_API+'/products/allproducts');
+      const jsonResponse  = await response.json();
+
+      console.log('jsonData:', jsonResponse ); // Check the response here
+
+      // Check if "products" array exists in the response
+      if (jsonResponse.products && Array.isArray(jsonResponse.products)) {
+        const formattedData = jsonResponse.products.map((item) => ({
+          id: item._id,
+          productImg: process.env.REACT_APP_API + '/products/products-thumbnail/' + item._id,
+          productName: item.productName,
+          color: item.color,
+          description: item.description,
+          createdAt: item.createdAt,
+        }));
+
+        setData(formattedData);
+
+      } else {
+        console.error('Invalid response format. Products array not found.');
+        setError(response.message);
+      }
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError(error);
+    }
   };
 
   useEffect(() => {
-    // Function to fetch data from the server and format it
-    const fetchDataFromServer = async () => {
-      try {
-        const response = await fetch(process.env.REACT_APP_ALL_PRODUCTS);
-        const jsonResponse  = await response.json();
-
-        console.log('jsonData:', jsonResponse ); // Check the response here
-
-        // Check if "products" array exists in the response
-        if (jsonResponse.products && Array.isArray(jsonResponse.products)) {
-          const formattedData = jsonResponse.products.map((item) => ({
-            id: item._id,
-            productImg: process.env.REACT_APP_SERVER_LINK + '/api/products-thumbnail/' + item._id,
-            productName: item.productName,
-            color: item.color,
-            description: item.description,
-            createdAt: item.createdAt,
-          }));
-
-          setData(formattedData);
-
-        } else {
-          console.error('Invalid response format. Products array not found.');
-        }
-        
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
     fetchDataFromServer();
   },[]);
+
+  const handleRefresh = async() => {
+    await fetchDataFromServer();
+  }
 
   const onDelete= async(productId) =>{
     try {
       // Send the delete request to the backend using axios
       console.log(productId);
-      await axios.delete(`http://localhost:3001/api/delete-product/${productId}`);
+      await axios.delete(`${process.env.REACT_APP_API}/products/delete-product/${productId}`);
       // After successful deletion, you can update the data in the state to reflect the change.
       // For example, you can remove the deleted product from the 'data' state array.
       setData((prevData) => prevData.filter((item) => item.id !== productId));
@@ -152,43 +159,57 @@ const Collections = () => {
 
   const onEditOne = async (productId) => {
     setIsUpdate(true);
+    setError('');
     try {
-      const response = await axios.delete(`http://localhost:3001/api/product-noimage/${productId}`);
+      const response = await axios.get(`${process.env.REACT_APP_API}/products/product-noimage/${productId}`);
       if (response.data) {
         setProduct(response.data);
         // Set default form data based on the selected product's data
         const defaultData = {
-          productName: response.data.productName,
-          description: response.data.description,
-          color: response.data.color,
+          productName: product.productName,
+          description: product.description,
+          color: product.color,
         };
         setFormData(defaultData);
         setProdId(productId);
         setOpen(true);
+        setError('');
+      } else {
+        setError(response.message);
       }
     } catch (error) {
       console.error("Error fetching product data:", error);
+      setError(error);
     }
   };
 
   const onFormSubmitUpdate = async (e) => {
     e.preventDefault();
+      setError('');
       console.log(`PRODUCT TO BE UPDATED: ${prodId}`);
       setUploading(true);
-
+      // Prepare the form data to send to the backend
+      const productData = new FormData();
+      productData.append("productName", formData.productName);
+      productData.append("description", formData.description);
+      productData.append("color", formData.color);
+      productData.append("productImg", formData.productImg);
+      
     try {
-      const response = await axios.put(`http://localhost:3001/api/update-product/${prodId}`, formData);
+      const response = await axios.put(`${process.env.REACT_APP_API}/products/update-product/${prodId}`, productData);
       // Handle the response as needed
+      
       console.log('Product updated:', response.data);
     } catch (error) {
       console.error('Error updating product:', error);
+      setError(error);
     }
-    setFormData({});
+    setIsUpdate(false);
     setUploading(false);
     setOpen(false);
+    setError('');
+    setFormData({});
   };
-
-  
 
   const onFormSubmitAdd = async (e) => {
     e.preventDefault();
@@ -202,7 +223,7 @@ const Collections = () => {
       productData.append("productImg", formData.productImg);
 
       // Send the data to the backend using axios
-      await axios.post(process.env.REACT_APP_CREATE_PRODUCT, productData);
+      await axios.post(process.env.REACT_APP_API+'/products/create-product', productData);
 
       setFormData({});
       setUploading(false);
@@ -210,18 +231,30 @@ const Collections = () => {
     } catch (error) {
       console.error("Error creating product:", error);
       setUploading(false);
+      
     }
   };
+
+  const handleClickAdd = () => {
+    setError('');
+    setFormData({});
+    setIsUpdate(false);
+    setOpen(true);
+  }
 
   return (
     <div className="pageContainer collections withTable">
       <div className="info">
         <h1>Collection</h1>
         <br />
-        <button onClick={() => setOpen(true)}>Add New Products</button>
+        <span>
+          <button onClick={handleClickAdd}>Add New Products</button>
+          <FiRefreshCcw onClick={handleRefresh}/>
+        </span>
       </div>
       <DataTable slug="products" columns={columns} rows={data} onDelete={onDelete} onEdit ={onEditOne}/>
       {open && <Form
+        isError={isError}
         isUpdate={isUpdate}
         slug="product"
         columns={columns2}

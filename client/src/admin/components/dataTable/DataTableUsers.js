@@ -7,7 +7,7 @@ import useAuth from "../../utils/useAuth";
 
 const DataTable = ({onEdit, slug, columns, rows, onDelete}) => {
   const { userRole } = useAuth();
-
+/* 
   const actionColumn = {
     field: "action",
     headerName: "Action",
@@ -33,16 +33,15 @@ const DataTable = ({onEdit, slug, columns, rows, onDelete}) => {
       );
     },
   };
-
+ */
   const column = [...columns]
-  const columnAdmin = [...columns, actionColumn]
 
   return (
     <div className="dataTable">
       <DataGrid
         className="dataGrid"
         rows={rows}
-        columns={((userRole === 'admin')? columnAdmin : column)}
+        columns={(column)}
         initialState={{
           pagination: {
             paginationModel: {

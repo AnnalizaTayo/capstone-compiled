@@ -397,23 +397,13 @@
         opacity: 0; 
         animation: fadeInAnimation 2s ease-in forwards;
     }
-    
+
     @keyframes fadeInAnimation {
         to {
             opacity: 1;
         }
     }
     
-    .fade-in-4 {
-        opacity: 0; 
-        animation: fadeInAnimation 4s ease-in forwards;
-    }
-    
-    @keyframes fadeInAnimation {
-        to {
-            opacity: 1;
-        }
-    }
     
     a {
         text-decoration: none;
@@ -507,4 +497,13 @@
     opacity: 0;
     transition: opacity 1.5s ease-in-out;
 }
-  
+
+.item .css-b62m3t-container {
+    
+    color: #000000 !important;
+}
+
+#react-select-2-listbox {
+    background-color: white;
+    color: #000000 !important;
+}

@@ -12,7 +12,7 @@ import Collections from './admin/pages/Collections';
 import Company from './admin/pages/Company';
 import Dashboard from './admin/pages/Dashboard';
 import Subscribers from './admin/pages/Subscribers';
-import Users from './admin/pages/Users';
+import Employees from './admin/pages/Employees';
 import FaqsList from './admin/pages/FaqsList';
 
 import AdminNav from './admin/components/navbar/Navbar';
@@ -89,7 +89,7 @@ function App() {
             <Route path="/admin-dashboard/collections" element={<AdminLayout><Collections /></AdminLayout>}/>
             <Route path="/admin-dashboard/company" element={<AdminLayout><Company /></AdminLayout>}/>
             <Route path="/admin-dashboard/subscribers" element={<AdminLayout><Subscribers /></AdminLayout>}/>
-            <Route path="/admin-dashboard/users" element={<AdminLayout><Users /></AdminLayout>}/>
+            <Route path="/admin-dashboard/users" element={<AdminLayout><Employees /></AdminLayout>}/>
             <Route path="/admin-dashboard/faqlist" element={<AdminLayout><FaqsList /></AdminLayout>}/>
             {/* Login */}
             <Route path="/admin-dashboard/login" element={<Login />}/>

@@ -14,6 +14,7 @@ exports.getAllUsers = asyncHandler(async (req, res) => {
 exports.createNewUser = asyncHandler(async (req, res) => {
     try {
         const { email, username, password, role, firstName, lastName } = req.body;
+        console.log(req.body);
 
         if (!email || !username || !password || !role || !firstName || !lastName) {
             return res.status(400).json({ message: 'All fields are required'});
@@ -42,6 +43,31 @@ exports.createNewUser = asyncHandler(async (req, res) => {
         return res.status(500).json({ message: 'An error occurred while registering the user.' });
     }
 });
+
+exports.getOneUserById = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        console.log('*******************');
+        console.log(`received data retrieval request: user ${userId}`);
+        console.log('*******************');
+
+        const user = await UserModel.findOne({_id: userId}).select('-password');
+
+        console.log('Retrieval successful! Sending data...');
+        console.log('*******************');
+
+        console.log(user);
+        console.log('*******************');
+
+        res.status(200).json({ user });
+        console.log('Data is now Available');
+        console.log('*******************');
+
+    } catch (error) {
+        console.error('Error retrieving users:', error.message);
+        res.status(500).json({ error: 'Failed to retrieve user' });
+    }
+};
 
 exports.updateUser = asyncHandler(async (req, res) => {
     const { id , email, username, password, role, firstName, lastName } = req.body

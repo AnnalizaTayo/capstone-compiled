@@ -7,8 +7,9 @@ const initialState = {
   companyData: null,
 };
 
-export const resetCompanyData = () => ({
+export const resetCompanyData = (data) => ({
     type: RESET_COMPANY_DATA,
+    payload: data,
 });
 
 // Reducer Function

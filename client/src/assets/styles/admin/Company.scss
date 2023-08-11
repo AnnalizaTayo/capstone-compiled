@@ -45,15 +45,19 @@
     grid-auto-rows: minmax(120px, auto);
   }
 
-  
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    margin: 1rem;
+  }
   
 
   .view {
-    display: block;
     padding: 20px;
     border-radius: 10px;
     border: 2px solid $soft-bg;
-    text-align: justify;
 
     img {
       width: 15rem;
@@ -72,6 +76,11 @@
 
   }
   .comp {
+    display: flex;
+    text-align: justify;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     text-align: center;
   }
 
@@ -90,7 +99,7 @@
     align-items: center;
     padding: 0.25rem 0.5rem;
     border-radius: 10px;
-    margin: -0.5rem auto 1rem;
+    margin: 1rem auto 1rem;
 
     &:hover {
       background-color: $soft-bg;

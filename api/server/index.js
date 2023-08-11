@@ -65,28 +65,7 @@ app.use('/users', require('../routes/userRoutes'));
 app.use('/subs', require('../routes/subscribersRoutes'));
 app.use('/faqs', require('../routes/faqsRouter'));
 app.use('/products', require('../routes/productsRoutes'));
-
-app.get('/views', async (req, res, next) => {
-  try {
-    if (!req.session.pageViews) {
-      req.session.pageViews = 1;
-    } else {
-      req.session.pageViews++;
-    }
-
-    const doc = await PageView.findOneAndUpdate(
-      { sessionId: req.session.id },
-      { $set: { pageViews: req.session.pageViews } },
-      { upsert: true, new: true }
-    );
-    
-    console.log('Updated page views in MongoDB:', doc);
-    res.send(`You have viewed this site ${req.session.pageViews} times.`);
-  } catch (err) {
-    console.error('Error updating page views in MongoDB:', err);
-    res.status(500).send('An error occurred while updating page views.');
-  }
-});
+app.use('/views', require('../routes/analyticsRoutes'));
 
 app.all('*', (req, res) => {
   res.status(404);

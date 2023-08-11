@@ -78,13 +78,28 @@ exports.updateCompany = async(req, res) => {
 
 
       const savedCompany = await updatedCompany.save();
-      res.status(200).json({ message: 'Company updated successfully', company: savedCompany });
+
+      const newCompanyData = {
+        companyName: savedCompany.companyName,
+        contact: {
+          email: savedCompany.contact.email,
+          landLineNumber: savedCompany.contact.landLineNumber,
+          mobileNumber: savedCompany.contact.mobileNumber,
+          website: savedCompany.contact.website,
+          address: savedCompany.contact.address
+        },
+        about: savedCompany.about,
+        mission: savedCompany.mission,
+        vision: savedCompany.vision
+      }
+
+      res.status(200).json({ message: 'Company updated successfully', company: newCompanyData });
       
     } else {
       res.status(404).json({ message: 'Company not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'An error occurred while updating the company', error: error.message });
+    res.status(500).json({ message: 'An error occurred', error: error.message });
   } 
 }
 
